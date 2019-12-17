@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use Auth;
+use Closure;
 
 class Team
 {
@@ -14,28 +14,35 @@ class Team
      * @param  \Closure  $next
      * @return mixed
      */
+
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->role == 1) {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        if (Auth::user()->role == 1) {
             return redirect()->route('superadmin');
         }
-        elseif (Auth::check() && Auth::user()->role == 5) {
+
+        if (Auth::user()->role == 5) {
             return redirect()->route('academy');
         }
-        elseif (Auth::check() && Auth::user()->role == 6) {
+
+        if (Auth::user()->role == 6) {
             return redirect()->route('scout');
         }
-        elseif (Auth::check() && Auth::user()->role == 4) {
+
+        if (Auth::user()->role == 4) {
             return $next($request);
         }
-        elseif (Auth::check() && Auth::user()->role == 3) {
+
+        if (Auth::user()->role == 3) {
             return redirect()->route('player');
         }
-        elseif (Auth::check() && Auth::user()->role == 2) {
+
+        if (Auth::user()->role == 2) {
             return redirect()->route('admin');
-        }
-        else {
-            return redirect()->route('login');
         }
     }
 }
